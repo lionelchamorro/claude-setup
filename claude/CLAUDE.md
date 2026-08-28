@@ -20,3 +20,28 @@ another language, answer in that language and apply the STE principles below to 
 This applies to chat responses, commit messages, and PR descriptions. It does not
 apply to code, code comments, or file contents, which follow the conventions of the
 surrounding codebase.
+
+## Delegating to subagents
+
+Pick the narrowest agent that covers the task. Each subagent runs its own requests,
+so a wide agent on a narrow task costs more and returns more noise.
+
+| Task | Agent |
+|---|---|
+| Find where something lives | `locate` |
+| Broad read-only sweep across many files | `Explore` |
+| Run tests, lint, or a type check | `test-runner` |
+| Notebooks, datasets, experiments, DVC | `notebook-analyst` |
+| Go code in orquesta-lite | `go-dev` |
+| Compose files, k8s, service wiring | `infra` |
+| Review a change before a PR | `reviewer` |
+| Write or update documentation | `docs` |
+
+Use `general-purpose` only when no agent above fits and the task needs both wide
+tool access and multiple steps. It inherits every tool, so treat it as the last
+resort, not the default.
+
+Do not delegate a single-fact lookup when you already know the file. Read it.
+
+Do not spawn a second agent for work an earlier agent already covers. Continue that
+agent with `SendMessage` instead — it keeps its context.
