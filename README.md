@@ -22,6 +22,34 @@ before it replaces them with symlinks.
 `CLAUDE.md` sets the response style to ASD-STE100 Simplified Technical English,
 mirroring the language the user writes in.
 
+## Subagents
+
+`claude/agents/` holds seven topical agents, symlinked to `~/.claude/agents`.
+`install.sh` links the directory, so an agent you create with `/agents` lands in
+this repository.
+
+| Agent | Model | Scope |
+|---|---|---|
+| `locate` | haiku | Finds where code lives. Read-only. Uses `ast-grep` where a repository configures it. |
+| `test-runner` | sonnet | Runs pytest, go test, ruff, mypy, and fixes the failures. |
+| `notebook-analyst` | sonnet | Notebooks, datasets, DVC pipelines, metric runs. |
+| `go-dev` | sonnet | Go code in orquesta-lite. |
+| `infra` | sonnet | docker-compose, k8s, service wiring. |
+| `reviewer` | opus | Adversarial pre-PR review. Read-only. |
+| `docs` | haiku | Documentation in Simplified Technical English. |
+
+Model precedence for a subagent, highest first:
+
+1. The `model` argument of the tool call
+2. The `model` field in the agent frontmatter
+3. `CLAUDE_CODE_SUBAGENT_MODEL`
+4. The parent session model
+
+The env var is therefore a floor, not an override. An agent that declares `opus`
+gets Opus. Anything that declares nothing falls back to Sonnet.
+
+`CLAUDE.md` carries the table that says which agent covers which task.
+
 ## Machine-specific parts
 
 `settings.json` carries `hooks` and `statusLine` that call `~/.orca/agent-hooks/`.
