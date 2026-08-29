@@ -1,14 +1,17 @@
-# dotfiles
+# claude-setup
 
-Claude Code configuration, shared across machines.
+Claude Code configuration: settings, writing style, and a roster of topical
+subagents. Shared across machines and with the team.
+
+See `ONBOARDING.md` for the version to hand to somebody new.
 
 ## Install
 
-    git clone <this-repo> ~/Projects/dotfiles
-    ~/Projects/dotfiles/install.sh
+    git clone git@github.com:lionelchamorro/claude-setup.git ~/Projects/claude-setup
+    ~/Projects/claude-setup/install.sh
 
-`install.sh` backs up any existing `~/.claude/settings.json` and `~/.claude/CLAUDE.md`
-before it replaces them with symlinks.
+`install.sh` backs up any existing `~/.claude/settings.json`, `~/.claude/CLAUDE.md`,
+and `~/.claude/agents` before it replaces them with symlinks.
 
 ## What is configured
 

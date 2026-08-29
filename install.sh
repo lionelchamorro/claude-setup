@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Symlink the Claude Code config from this repo into ~/.claude.
+# Links settings.json, CLAUDE.md, and the agents directory.
 # Existing real files are backed up to <file>.pre-dotfiles-<timestamp>.
 set -euo pipefail
 
@@ -21,6 +22,7 @@ link() {
 
 link claude/settings.json .claude/settings.json
 link claude/CLAUDE.md     .claude/CLAUDE.md
+link claude/agents        .claude/agents
 
 echo
 echo "Done. Restart running Claude Code sessions to pick up model and env changes."
