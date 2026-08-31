@@ -32,7 +32,7 @@ so a wide agent on a narrow task costs more and returns more noise.
 | Broad read-only sweep across many files | `Explore` |
 | Run tests, lint, or a type check | `test-runner` |
 | Notebooks, datasets, experiments, DVC | `notebook-analyst` |
-| Go code in orquesta-lite | `go-dev` |
+| Write or change application code | `developer` |
 | Compose files, k8s, service wiring | `infra` |
 | Review a change before a PR | `reviewer` |
 | Write or update documentation | `docs` |

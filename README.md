@@ -10,8 +10,13 @@ See `ONBOARDING.md` for the version to hand to somebody new.
     git clone git@github.com:lionelchamorro/claude-setup.git ~/Projects/claude-setup
     ~/Projects/claude-setup/install.sh
 
-`install.sh` backs up any existing `~/.claude/settings.json`, `~/.claude/CLAUDE.md`,
-and `~/.claude/agents` before it replaces them with symlinks.
+`install.sh` needs `jq`. It backs up any existing `~/.claude/CLAUDE.md` and
+`~/.claude/agents` before it replaces them with symlinks, so an edit in this
+repository is live at once.
+
+`~/.claude/settings.json` is different: `install.sh` merges it instead of linking
+it. Re-run `install.sh` after you change `claude/settings.json` here. See
+"Machine-specific parts".
 
 ## What is configured
 
@@ -27,7 +32,7 @@ mirroring the language the user writes in.
 
 ## Subagents
 
-`claude/agents/` holds seven topical agents, symlinked to `~/.claude/agents`.
+`claude/agents/` holds six topical agents, symlinked to `~/.claude/agents`.
 `install.sh` links the directory, so an agent you create with `/agents` lands in
 this repository.
 
@@ -36,7 +41,7 @@ this repository.
 | `locate` | haiku | Finds where code lives. Read-only. Uses `ast-grep` where a repository configures it. |
 | `test-runner` | sonnet | Runs pytest, go test, ruff, mypy, and fixes the failures. |
 | `notebook-analyst` | sonnet | Notebooks, datasets, DVC pipelines, metric runs. |
-| `go-dev` | sonnet | Go code in orquesta-lite. |
+| `developer` | sonnet | Application code in any language. Builds and runs the tests. |
 | `infra` | sonnet | docker-compose, k8s, service wiring. |
 | `reviewer` | opus | Adversarial pre-PR review. Read-only. |
 | `docs` | haiku | Documentation in Simplified Technical English. |
@@ -55,8 +60,22 @@ gets Opus. Anything that declares nothing falls back to Sonnet.
 
 ## Machine-specific parts
 
-`settings.json` carries `hooks` and `statusLine` that call `~/.orca/agent-hooks/`.
-Each command guards on the file existing, so it is inert on a machine without Orca.
+This repository does not carry the `hooks` and `statusLine` keys. Orca owns them.
+
+Orca is the desktop app that runs agent CLIs in panes. To draw the state of each
+pane, it registers `~/.orca/agent-hooks/claude-hook.sh` on ten Claude Code events
+and on the status line. The script posts each event to a port on localhost.
+
+Orca rewrites those two keys in `~/.claude/settings.json` on every start. It
+builds the script path from the home directory of the machine and writes it as an
+absolute path in single quotes. It offers no environment variable to change that
+path, and it emits no `$HOME` form. A symlink would therefore carry one machine's
+home directory into this repository, and a hand-edited path would come back to
+the absolute form at the next start.
+
+`install.sh` keeps `hooks` and `statusLine` from the file already on the machine
+and overlays every other key from this repository. Orca manages its own block per
+machine. On a machine without Orca, the two keys are simply absent.
 
 ## Notes on precedence
 
@@ -66,6 +85,6 @@ Claude Code reads settings in this order, highest first:
 2. CLI arguments
 3. `.claude/settings.local.json` in the project
 4. `.claude/settings.json` in the project
-5. `~/.claude/settings.json` (this repo)
+5. `~/.claude/settings.json` (merged from this repo)
 
 A project can therefore override anything here.

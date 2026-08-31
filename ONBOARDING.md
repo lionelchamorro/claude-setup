@@ -18,7 +18,8 @@ from commits and set a shared writing style.
 ## 1. User settings
 
 Add these keys to `~/.claude/settings.json`. Keep any hooks, plugins, or status line
-you already have.
+you already have. `install.sh` does this merge for you: it keeps the `hooks` and
+`statusLine` of the machine and overlays the keys below.
 
 ```json
 {
@@ -94,7 +95,7 @@ Repository settings override your user settings. They do not set `model` or
 
 Run `install.sh` from this repository, or copy `claude/agents/` into `~/.claude/agents/`.
 
-Seven agents replace the default `general-purpose` agent for the work this team
+Six agents replace the default `general-purpose` agent for the work this team
 does. Each one declares its own tools and its own model.
 
 | Agent | Model | Scope |
@@ -102,7 +103,7 @@ does. Each one declares its own tools and its own model.
 | `locate` | haiku | Finds where code lives. Read-only. |
 | `test-runner` | sonnet | Runs pytest, go test, ruff, mypy, and fixes the failures. |
 | `notebook-analyst` | sonnet | Notebooks, datasets, DVC pipelines, metric runs. |
-| `go-dev` | sonnet | Go code in orquesta-lite. |
+| `developer` | sonnet | Application code in any language. Builds and runs the tests. |
 | `infra` | sonnet | docker-compose, k8s, service wiring. |
 | `reviewer` | opus | Adversarial pre-PR review. Read-only. |
 | `docs` | haiku | Documentation. |
